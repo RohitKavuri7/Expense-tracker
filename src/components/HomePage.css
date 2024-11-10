@@ -1,0 +1,60 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center content vertically */
+  height: 100vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  margin: 0; /* Set margin to 0 to avoid extra space */
+  background-color: #f0ea80; /* Background color for the login page */
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-container input {
+  margin: 10px 0;
+  padding: 10px;
+  width: 450%; /* Make input fields full width */
+  max-width: 450px; /* Set a max-width to match button width */
+}
+
+.login-container button {
+  padding: 10px;
+  cursor: pointer;
+  width: 450%; /* Make the button full width */
+  max-width: 450px; /* Match the input max-width */
+}
+
+.error {
+  color: red;
+}
+
+body {
+  background-color: #075574; /* Default background color */
+}
+
+html, body {
+  height: 100%;
+  width: 100%; /* Ensure full width */
+  margin: 0;
+}
+
+.success {
+  color: green;
+}
+
+.main-container {
+  min-height: 100vh;
+  min-width: 100vw; /* Ensure full width */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #55c98b; /* Background color for the login page */
+}

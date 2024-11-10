@@ -1,0 +1,182 @@
+.expense-list {
+  margin: 20px auto; /* Center the container */
+  background-color: #68a7c2; /* Background color */
+  padding: 20px; /* Add padding for better spacing */
+  border-radius: 8px; /* Rounded corners */ /* Set a max width to reduce the overall size */ /* Responsive width */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.budget-summary {
+  margin-bottom: 20px;
+  color: #fff; /* Changed to white for better contrast */
+  font-size: 1.2em;
+}
+
+.budget-alert {
+  color: #ffcc00; /* Yellow for alert to stand out */
+  font-weight: bold;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column; /* Arrange elements in a column */
+  margin-bottom: 15px;
+  align-items: center; /* Center the search elements */
+}
+
+.search-input,
+.category-filter,
+.sort-dropdown {
+  margin-bottom: 10px; /* Adjust spacing between elements */
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #fff; /* Light border for better visibility */
+  border-radius: 5px;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.sort-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center; /* Center the sort buttons */
+}
+
+.expense-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.expense-item {
+  display: flex;
+  justify-content: space-between; /* Ensure items are aligned in a row */
+  align-items: center; /* Vertically center items */
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 5px;
+  background-color: #4c7b89; /* Muted teal for item background */
+}
+
+.expense-item > * {
+  flex: 1; /* Equal spacing for all columns */
+  text-align: center; /* Center the text in each column */
+}
+
+.expense-item .delete-button {
+  flex: 0 0 auto; /* Prevent the delete button from expanding */
+}
+
+.delete-button {
+  margin-left: 20px;
+  padding: 5px 10px;
+  background-color: #f44336; /* Red for delete action */
+  color: white; /* Text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #e53935; /* Darker red on hover */
+}
+
+.total-expenses {
+  font-size: 1.2em;
+  text-align: center;
+  margin-top: 20px;
+  color: #fff; /* Changed to white for better contrast */
+}
+
+.report-button,
+.add-expense-button,
+.set-budget-button {
+  margin: 10px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.report-button {
+  background-color: #2196F3; /* Blue for report button */
+  color: white; /* White text for contrast */
+}
+
+.add-expense-button {
+  background-color: #4CAF50; /* Green for add expense */
+  color: white; /* White text for contrast */
+}
+
+.set-budget-button {
+  background-color: #FF9800; /* Orange for set budget */
+  color: white; /* White text for contrast */
+}
+
+.report-button:hover {
+  background-color: #1976D2; /* Darker blue on hover */
+}
+
+.add-expense-button:hover {
+  background-color: #388E3C; /* Darker green on hover */
+}
+
+.set-budget-button:hover {
+  background-color: #F57C00; /* Darker orange on hover */
+}
+
+.edit-expense-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.edit-expense-form input,
+.edit-expense-form select {
+  margin: 5px 0;
+  padding: 5px;
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 5px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.update-button,
+.cancel-button {
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.update-button {
+  background-color: #28a745; /* Green for update */
+  color: white; /* White text for contrast */
+}
+
+.update-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.cancel-button {
+  background-color: #dc3545; /* Red for cancel */
+  color: white; /* White text for contrast */
+}
+
+.cancel-button:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Ensure full height and width */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #e9f7f9; /* Light background for the whole page */
+}

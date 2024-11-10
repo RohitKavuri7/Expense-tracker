@@ -1,0 +1,32 @@
+/* BudgetForm.css */
+.budget-form {
+    margin: 20px;
+    padding: 20px; /* Increased padding for a more spacious look */
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+}
+
+.budget-form input {
+    margin: 5px 0;
+    padding: 12px; /* Increased padding */
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Slightly less rounded */
+}
+
+.budget-form button {
+    margin-top: 10px;
+    padding: 12px; /* Increased padding */
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.budget-form button:hover {
+    background-color: #45a049;
+}
