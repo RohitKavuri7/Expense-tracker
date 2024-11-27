@@ -12,7 +12,6 @@ const ExpenseForm = ({ user, expenseId }) => {
   const [category, setCategory] = useState('');
   const [customCategory, setCustomCategory] = useState('');
   const [receipt, setReceipt] = useState(null);
-  const [ocrText, setOcrText] = useState('');
   const [date, setDate] = useState('');
   const [existingReceiptURL, setExistingReceiptURL] = useState('');
 
@@ -41,8 +40,6 @@ const ExpenseForm = ({ user, expenseId }) => {
     setReceipt(file);
     if (file) {
       processReceipt(file);
-    } else {
-      setOcrText('');
     }
   };
 
@@ -51,7 +48,6 @@ const ExpenseForm = ({ user, expenseId }) => {
     reader.onload = (event) => {
       Tesseract.recognize(event.target.result, 'eng')
         .then(({ data: { text } }) => {
-          setOcrText(text);
           extractExpenseData(text);
         })
         .catch(error => console.error('OCR processing failed:', error));
@@ -61,15 +57,45 @@ const ExpenseForm = ({ user, expenseId }) => {
 
   const extractExpenseData = (text) => {
     const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
-    const amountRegex = /\$?\d+(?:,\d{3})*(?:\.\d{2})?/;
 
-    if (lines.length > 0) {
-      setName(lines[0]);
-      const match = lines[0].match(amountRegex);
-      if (match) setAmount(match[0].replace('$', ''));
+    const storeKeywords = ['Walmart', 'Target', 'Costco'];
+    const amountKeywords = ['Total', 'Amount Due', 'Balance'];
+
+    let foundStoreName = '';
+    let foundAmount = '';
+
+    // Look for a line with a store name
+    for (const line of lines) {
+      if (storeKeywords.some(keyword => line.toLowerCase().includes(keyword.toLowerCase()))) {
+        foundStoreName = line;
+        break;
+      }
     }
-    if (lines.length > 1) {
-      setCategory(predefinedCategories.includes(lines[1]) ? lines[1] : 'Other');
+
+    // Look for the total amount
+    for (const line of lines) {
+      if (amountKeywords.some(keyword => line.toLowerCase().includes(keyword.toLowerCase()))) {
+        const amountMatch = line.match(/\$?\d+(?:,\d{3})*(?:\.\d{2})?/);
+        if (amountMatch) {
+          foundAmount = amountMatch[0].replace('$', '');
+          break;
+        }
+      }
+    }
+
+    // Set extracted data in the form fields
+    if (foundStoreName) {
+      setName(foundStoreName);
+    }
+    if (foundAmount) {
+      setAmount(foundAmount);
+    }
+
+    // Auto-select category based on the store if possible
+    if (foundStoreName && predefinedCategories.includes(foundStoreName)) {
+      setCategory(foundStoreName);
+    } else {
+      setCategory('Other');
     }
   };
 
@@ -176,7 +202,6 @@ const ExpenseForm = ({ user, expenseId }) => {
           onChange={handleReceiptUpload}
         />
         {receipt && <p>Receipt Uploaded: {receipt.name}</p>}
-        {ocrText && <p>Extracted Text: {ocrText}</p>}
         <button type="submit">{expenseId ? 'Update Expense' : 'Add Expense'}</button>
       </form>
       {expenseId && existingReceiptURL && !receipt && (

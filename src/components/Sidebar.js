@@ -6,6 +6,7 @@ import './Sidebar.css'; // Optional: Create a CSS file for styling
 const Sidebar = () => {
   return (
     <div className="sidebar">
+      
       <ul>
         <li>
           <Link to="/">Home</Link>
@@ -18,6 +19,10 @@ const Sidebar = () => {
         </li>
         <li>
           <Link to="/add-expense">Add Expense</Link>
+        </li>
+        {/* Profile Section */}
+        <li>
+          <Link to="/profile">Profile</Link>
         </li>
       </ul>
     </div>

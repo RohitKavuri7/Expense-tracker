@@ -1,35 +1,41 @@
+/* Sidebar styling */
 .sidebar {
-    position: fixed; /* Keep the sidebar fixed on the left */
-    top: 0;          /* Align it to the top */
-    left: 0;         /* Align it to the left */
-    width: 200px;    /* Set a fixed width for the sidebar */
-    height: 100%;    /* Full height of the viewport */
-    background-color: #f4f4f4; /* Background color */
-    padding: 20px;   /* Padding for inner content */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for effect */
-    z-index: 1000;   /* Ensure it appears above other content */
-  }
-  
-  .sidebar h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-  }
-  
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    margin: 10px 0;
-  }
-  
-  .sidebar ul li a {
-    text-decoration: none;
-    color: #4db64b; /* Dark color for text */
-  }
-  
-  .sidebar ul li a:hover {
-    text-decoration: underline; /* Underline on hover */
-  }
-  
+  position: fixed; /* Keep the sidebar fixed on the left */
+  top: 0;          /* Align it to the top */
+  left: 0;         /* Align it to the left */
+  width: 200px;    /* Set a fixed width for the sidebar */
+  height: 100%;    /* Full height of the viewport */
+  background-color: #f4f4f4; /* Background color */
+  padding: 20px;   /* Padding for inner content */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for effect */
+  z-index: 1000;   /* Ensure it appears above other content */
+}
+
+.sidebar h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #4db64b;  /* Match the link color for consistency */
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 10px 0;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #4db64b; /* Dark color for text */
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* Profile Section */
+.sidebar ul li a.profile-link {
+  font-weight: bold; /* Highlight the profile link */
+}

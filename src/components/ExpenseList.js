@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// eslint-disable-next-line
 import { Link } from 'react-router-dom';
 import { db } from '../firebaseConfig';
 import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import './ExpenseList.css';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 const ExpenseList = ({ user }) => {
   const [expenses, setExpenses] = useState([]);
@@ -76,6 +77,14 @@ const ExpenseList = ({ user }) => {
     }
   };
 
+  const uploadReceipt = async (file) => {
+    const storage = getStorage();
+    const storageRef = ref(storage, `receipts/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+  };
+
   const handleEdit = (expense) => {
     setEditingExpense(expense.id);
     setUpdatedExpense({
@@ -94,9 +103,6 @@ const ExpenseList = ({ user }) => {
 
     // Handle file upload (if any)
     if (updatedExpense.receiptFile) {
-      // Here you would add logic to upload the file to a storage service (like Firebase Storage)
-      // and then get the URL to save it in Firestore
-      // For now, let's assume the file upload function returns a URL
       const uploadedReceiptURL = await uploadReceipt(updatedExpense.receiptFile); // Implement this function
       updatedExpense.receiptURL = uploadedReceiptURL;
     }
@@ -126,6 +132,8 @@ const ExpenseList = ({ user }) => {
   return (
     <div className="expense-list">
       <h2>My Expenses</h2>
+      
+      
       {loading ? <p>Loading expenses...</p> : (
         <>
           {budget !== null && (
@@ -229,30 +237,20 @@ const ExpenseList = ({ user }) => {
                 type="text"
                 value={updatedExpense.receiptURL}
                 onChange={(e) => setUpdatedExpense({ ...updatedExpense, receiptURL: e.target.value })}
-                placeholder="Receipt URL (if any)"
+                placeholder="Receipt URL"
               />
               <input
                 type="file"
                 onChange={handleFileChange}
-                accept="image/*" // Optional: restrict to image files
               />
-              <div className="edit-form-actions">
-                <button type="submit">Update</button>
-                <button type="button" onClick={handleCancelEdit}>Cancel</button>
-              </div>
+              <button type="submit">Update</button>
+              <button type="button" onClick={handleCancelEdit}>Cancel</button>
             </form>
           )}
         </>
       )}
     </div>
   );
-};
-
-// Mock function for uploading receipt (implement this based on your storage logic)
-const uploadReceipt = async (file) => {
-  // Upload file to your storage service and return the file URL
-  // Placeholder implementation
-  return 'https://example.com/path-to-uploaded-receipt';
 };
 
 export default ExpenseList;

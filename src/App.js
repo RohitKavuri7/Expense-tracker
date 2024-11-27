@@ -8,6 +8,7 @@ import BudgetForm from './components/BudgetForm';
 import ForgotPassword from './components/ForgotPassword';
 import Sidebar from './components/Sidebar';
 import { auth } from './firebaseConfig';
+import Profile from './components/Profile';
 import './App.css';
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
                   <Route path="/report" element={<ExpenseReport user={user} />} />
                   <Route path="/set-budget" element={<BudgetForm user={user} />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/profile" element={<Profile />} />
                 </Routes>
               </main>
             </div>

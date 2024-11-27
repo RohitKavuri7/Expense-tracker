@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import './HomePage.css'; // Add CSS for styling if needed
+
+const db = getFirestore();
 
 const HomePage = ({ setUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
   const [isResettingPassword, setIsResettingPassword] = useState(false);
@@ -26,8 +30,18 @@ const HomePage = ({ setUser }) => {
     e.preventDefault();
     setError('');
     try {
+      // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user);
+      const user = userCredential.user;
+
+      // Store the user's name in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        name,
+        email,
+      });
+
+      setUser(user);
+      alert('User registered successfully!');
     } catch (err) {
       setError('Failed to register: ' + err.message);
     }
@@ -54,38 +68,51 @@ const HomePage = ({ setUser }) => {
         <>
           <h3>Reset Password</h3>
           <form onSubmit={handleResetPassword}>
-            <input 
-              type="email" 
+            <input
+              type="email"
               name="Email"
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Email" 
-              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
             />
             <button type="submit">Send Reset Email</button>
           </form>
-          <p onClick={() => setIsResettingPassword(false)} style={{ cursor: 'pointer', fontSize: 'small', color: 'blue' }}>
+          <p
+            onClick={() => setIsResettingPassword(false)}
+            style={{ cursor: 'pointer', fontSize: 'small', color: 'blue' }}
+          >
             Back to Login
           </p>
         </>
       ) : (
         <>
           <form onSubmit={isRegistering ? handleRegister : handleLogin}>
-            <input 
-              type="email" 
+            {isRegistering && (
+              <input
+                type="text"
+                name="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Name"
+                required
+              />
+            )}
+            <input
+              type="email"
               name="Email"
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Email" 
-              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
             />
-            <input 
+            <input
               type="password"
-              name="Password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              placeholder="Password" 
-              required 
+              name="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
             />
             <button type="submit">{isRegistering ? 'Register' : 'Login'}</button>
           </form>
@@ -95,9 +122,10 @@ const HomePage = ({ setUser }) => {
               {isRegistering ? 'Login' : 'Register'}
             </button>
           </p>
-          <p 
-            onClick={() => setIsResettingPassword(true)} 
-            style={{ cursor: 'pointer', fontSize: 'small', color: 'blue' }}>
+          <p
+            onClick={() => setIsResettingPassword(true)}
+            style={{ cursor: 'pointer', fontSize: 'small', color: 'blue' }}
+          >
             Forgot Password?
           </p>
         </>
