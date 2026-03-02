@@ -1,183 +1,180 @@
 .expense-list {
-  margin: 20px auto; /* Center the container */
-  background-color: #68a7c2; /* Background color */
-  padding: 20px; /* Add padding for better spacing */
-  border-radius: 8px; /* Rounded corners */ /* Set a max width to reduce the overall size */ /* Responsive width */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 24px;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .budget-summary {
   margin-bottom: 20px;
-  color: #fff; /* Changed to white for better contrast */
-  font-size: 1.2em;
+  padding: 16px;
+  background-color: var(--color-panel-soft);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 1.1rem;
+}
+
+.budget-summary.over-budget {
+  background-color: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--color-danger);
 }
 
 .budget-alert {
-  color: #ffcc00; /* Yellow for alert to stand out */
-  font-weight: bold;
+  color: var(--color-danger);
+  font-weight: 600;
+  margin: 8px 0 0;
 }
 
 .search-container {
   display: flex;
-  flex-direction: column; /* Arrange elements in a column */
-  margin-bottom: 15px;
-  align-items: center; /* Center the search elements */
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .search-input,
 .category-filter,
-.sort-dropdown {
-  margin-bottom: 10px; /* Adjust spacing between elements */
-  padding: 10px;
-  width: 100%;
-  max-width: 300px;
-  border: 1px solid #fff; /* Light border for better visibility */
-  border-radius: 5px;
-  box-sizing: border-box; /* Ensure padding doesn't affect width */
+.sort-select,
+.order-select {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  min-width: 120px;
+  max-width: 200px;
 }
 
 .sort-controls {
   display: flex;
-  gap: 10px;
-  justify-content: center; /* Center the sort buttons */
+  gap: 8px;
+  align-items: center;
 }
 
-.expense-list ul {
-  list-style-type: none;
+.expense-list ul.expenses {
+  list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .expense-item {
   display: flex;
-  justify-content: space-between; /* Ensure items are aligned in a row */
-  align-items: center; /* Vertically center items */
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 5px;
-  background-color: #4c7b89; /* Muted teal for item background */
+  padding: 14px 16px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
 }
 
 .expense-item > * {
-  flex: 1; /* Equal spacing for all columns */
-  text-align: center; /* Center the text in each column */
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.expense-item .delete-button {
-  flex: 0 0 auto; /* Prevent the delete button from expanding */
+.expense-name {
+  font-weight: 500;
+  color: var(--color-text);
 }
 
-.delete-button {
-  margin-left: 20px;
-  padding: 5px 10px;
-  background-color: #f44336; /* Red for delete action */
-  color: white; /* Text color */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.expense-amount {
+  font-weight: 600;
+  color: var(--color-primary);
 }
 
-.delete-button:hover {
-  background-color: #e53935; /* Darker red on hover */
+.expense-category,
+.expense-date {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.expense-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.expense-actions button {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.expense-actions button:first-of-type {
+  background-color: var(--color-panel);
+  color: var(--color-text-on-primary);
+}
+
+.expense-actions button:first-of-type:hover {
+  background-color: var(--color-accent);
+}
+
+.expense-actions button:last-of-type {
+  background-color: var(--color-danger);
+  color: var(--color-text-on-primary);
+}
+
+.expense-actions button:last-of-type:hover {
+  background-color: var(--color-danger-hover);
+}
+
+.expense-receipt a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.expense-receipt a:hover {
+  text-decoration: underline;
 }
 
 .total-expenses {
-  font-size: 1.2em;
+  font-size: 1.2rem;
+  font-weight: 600;
   text-align: center;
   margin-top: 20px;
-  color: #fff; /* Changed to white for better contrast */
-}
-
-.report-button,
-.add-expense-button,
-.set-budget-button {
-  margin: 10px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-
-.report-button {
-  background-color: #2196F3; /* Blue for report button */
-  color: white; /* White text for contrast */
-}
-
-.add-expense-button {
-  background-color: #4CAF50; /* Green for add expense */
-  color: white; /* White text for contrast */
-}
-
-.set-budget-button {
-  background-color: #FF9800; /* Orange for set budget */
-  color: white; /* White text for contrast */
-}
-
-.report-button:hover {
-  background-color: #1976D2; /* Darker blue on hover */
-}
-
-.add-expense-button:hover {
-  background-color: #388E3C; /* Darker green on hover */
-}
-
-.set-budget-button:hover {
-  background-color: #F57C00; /* Darker orange on hover */
+  color: var(--color-text);
 }
 
 .edit-expense-form {
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
+  margin-top: 16px;
+  padding: 16px;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
 }
 
 .edit-expense-form input,
 .edit-expense-form select {
-  margin: 5px 0;
-  padding: 5px;
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 5px;
-  box-sizing: border-box;
+  margin: 6px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
   width: 100%;
+  max-width: 100%;
 }
 
-.edit-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
+.edit-expense-form .edit-buttons,
+.edit-expense-form button {
+  margin-top: 8px;
+  margin-bottom: 0;
 }
 
-.update-button,
-.cancel-button {
-  padding: 10px;
-  border: none;
-  cursor: pointer;
+.edit-expense-form button[type="submit"] {
+  background-color: var(--color-primary);
 }
 
-.update-button {
-  background-color: #28a745; /* Green for update */
-  color: white; /* White text for contrast */
+.edit-expense-form button[type="button"] {
+  background-color: var(--color-text-muted);
 }
 
-.update-button:hover {
-  background-color: #218838; /* Darker green on hover */
-}
-
-.cancel-button {
-  background-color: #dc3545; /* Red for cancel */
-  color: white; /* White text for contrast */
-}
-
-.cancel-button:hover {
-  background-color: #c82333; /* Darker red on hover */
-}
-
-/* Ensure full height and width */
-html, body {
-  height: 100%;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #e9f7f9; /* Light background for the whole page */
+.edit-expense-form button[type="button"]:hover {
+  background-color: var(--color-danger);
 }

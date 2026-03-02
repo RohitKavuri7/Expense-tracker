@@ -1,12 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { db } from '../firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
 import './BudgetForm.css';
 
 const BudgetForm = ({ user }) => {
   const [budget, setBudget] = useState('');
+  const [currentBudget, setCurrentBudget] = useState(null);
   const navigate = useNavigate();  // Initialize navigate
+
+  useEffect(() => {
+    const fetchBudget = async () => {
+      try {
+        const budgetRef = doc(db, 'budgets', user.uid);
+        const budgetSnap = await getDoc(budgetRef);
+        if (budgetSnap.exists()) {
+          const currentBudget = budgetSnap.data().budget;
+          setCurrentBudget(currentBudget != null ? currentBudget : null);
+          setBudget(currentBudget != null ? String(currentBudget) : '');
+        }
+      } catch (error) {
+        // Keep form usable even if initial fetch fails.
+      }
+    };
+    fetchBudget();
+  }, [user.uid]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,9 +36,11 @@ const BudgetForm = ({ user }) => {
 
     try {
       // Save budget to Firestore
-      await setDoc(doc(db, 'budgets', user.uid), { budget: parseFloat(budget) });
+      const parsedBudget = parseFloat(budget);
+      await setDoc(doc(db, 'budgets', user.uid), { budget: parsedBudget });
       alert('Budget set successfully!');
-      setBudget(''); // Clear the input field
+      setCurrentBudget(parsedBudget);
+      setBudget(String(parsedBudget)); // Keep latest value visible
 
       // Navigate back to the Expense List page after setting the budget
       navigate('/');  // Redirect to the Expense List page
@@ -33,6 +53,9 @@ const BudgetForm = ({ user }) => {
   return (
     <form onSubmit={handleSubmit} className="budget-form">
       <h2>Set Your Budget</h2>
+      {currentBudget != null && (
+        <p className="budget-current">Current budget: ${currentBudget.toFixed(2)}</p>
+      )}
       <input
         type="number"
         name="budget"

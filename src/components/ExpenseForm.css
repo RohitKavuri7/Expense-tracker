@@ -1,33 +1,47 @@
-/* ExpenseForm.css */
 .expense-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  padding: 20px; /* Added padding */
-  border: 1px solid #ccc;
-  border-radius: 8px; /* Rounded corners */
-  background-color: #42a3dfd1;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow */
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.expense-form h2 {
+  margin-top: 0;
 }
 
 .expense-form input,
-.expense-form textarea {
-  margin: 5px 0;
-  padding: 12px; /* Increased padding */
-  border: 1px solid #ccc;
-  border-radius: 4px; /* Slightly less rounded */
+.expense-form select {
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  width: 100%;
 }
 
-.expense-form button {
-  padding: 12px; /* Increased padding */
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s; /* Smooth transition */
+.expense-form button[type="submit"] {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  width: 100%;
 }
 
-.expense-form button:hover {
-  background-color: #0056b3;
+.expense-form button[type="submit"]:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.expense-form label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.expense-form a {
+  color: var(--color-primary);
 }

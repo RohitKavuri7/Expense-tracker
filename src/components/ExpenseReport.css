@@ -1,156 +1,139 @@
-/* Container for the entire report */
 .expense-report {
-    background-color: #f4f6f8;
-    padding: 40px;
-    max-width: 800px;
-    margin: 40px auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
 }
 
-/* Headings for sections */
-.expense-report h2, .expense-report h3 {
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 24px;
+.expense-report h2,
+.expense-report h3 {
+  color: var(--color-accent);
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.35rem;
 }
 
-/* Filter section with date pickers */
-.date-range-filter {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
+.expense-report .filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 24px;
 }
 
-.date-range-filter label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 16px;
-    color: #555;
+.expense-report .filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
 }
 
-.date-range-filter input, .filters select {
-    padding: 8px 12px;
-    margin-top: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 200px;
-    background-color: #fff;
-    transition: border-color 0.2s;
+.expense-report .filters input,
+.expense-report .filters select {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  min-width: 140px;
 }
 
-/* Category Filter Styling */
-.filters {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    gap: 10px;
+.expense-report ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-/* Enhancing expense list */
-ul {
-    list-style-type: none;
-    padding: 0;
+.expense-report > ul > li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
 }
 
-li {
-    background-color: #fff;
-    padding: 15px 20px;
-    margin: 10px 0;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ddd;
-    transition: box-shadow 0.3s;
+.expense-report > ul > li strong {
+  color: var(--color-text);
 }
 
-li:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.expense-report > ul > li span {
+  color: var(--color-text-muted);
 }
 
-li strong {
-    color: #333;
-    font-size: 18px;
-}
-
-li span {
-    color: #666;
-    font-size: 16px;
-}
-
-/* Styling for category totals */
 .category-totals {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    margin-top: 20px;
-    font-size: 18px;
-    color: #333;
+  margin-top: 24px;
+  padding: 20px;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.category-totals h3 {
+  margin-top: 0;
+  text-align: left;
 }
 
 .category-totals ul {
-    padding: 0;
+  padding: 0;
 }
 
 .category-totals li {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+  background: none;
+  margin: 0;
+  border-radius: 0;
 }
 
 .category-totals li:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
-/* Button to reset date filter or perform actions */
 .report-button {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 12px 20px;
-    background-color: #00ffd9ea;
-    color: #fff;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 20px;
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
 }
 
 .report-button:hover {
-    background-color: #0056b3;
+  background-color: var(--color-primary-hover);
 }
 
-/* Pie Chart */
 .pie-chart {
-    max-width: 400px;
-    margin: 20px auto;
+  max-width: 360px;
+  margin: 24px auto;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
-    .date-range-filter {
-        flex-direction: column;
-        align-items: center;
-    }
+  .expense-report {
+    padding: 20px;
+  }
 
-    .date-range-filter label {
-        width: 100%;
-        margin-bottom: 20px;
-    }
+  .expense-report .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .date-range-filter input {
-        width: 100%;
-    }
-    
-    .chart-container {
-        margin-top: 40px;
-        text-align: center;
-    }
+  .expense-report .filters input,
+  .expense-report .filters select {
+    width: 100%;
+    min-width: 0;
+  }
 }

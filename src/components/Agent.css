@@ -1,0 +1,194 @@
+.agent-page {
+  margin: 0 auto;
+  max-width: 640px;
+  padding: 24px;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.agent-page h2 {
+  margin-top: 0;
+}
+
+.agent-hint {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.agent-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.agent-clear-btn {
+  padding: 6px 10px;
+  margin: 0;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.agent-clear-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.agent-messages {
+  min-height: 260px;
+  max-height: 420px;
+  overflow-y: auto;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--color-border);
+}
+
+.agent-placeholder {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 32px 16px;
+  font-size: 0.9rem;
+}
+
+.agent-msg {
+  margin-bottom: 14px;
+}
+
+.agent-msg-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-bottom: 4px;
+}
+
+.agent-msg--user .agent-msg-label {
+  color: var(--color-primary);
+}
+
+.agent-msg-content {
+  background-color: var(--color-bg-card);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  word-break: break-word;
+  border: 1px solid var(--color-border);
+}
+
+.agent-msg--agent .agent-msg-content {
+  background-color: var(--color-primary-light);
+  border-left: 3px solid var(--color-primary);
+}
+
+.agent-msg--loading {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.agent-form {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.agent-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  min-width: 0;
+}
+
+.agent-send {
+  padding: 12px 24px;
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  margin: 0;
+}
+
+.agent-send:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.agent-send:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.agent-activity {
+  margin-top: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  padding: 12px;
+}
+
+.agent-activity h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.agent-activity-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.agent-activity ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.agent-activity li {
+  margin-bottom: 8px;
+  color: var(--color-text);
+  font-size: 0.86rem;
+}
+
+.activity-time {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.activity-status {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-right: 8px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.activity-status--success {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.activity-status--error {
+  background: rgba(192, 57, 43, 0.14);
+  color: var(--color-danger);
+}
+
+.activity-status--pending_confirmation {
+  background: rgba(243, 156, 18, 0.15);
+  color: #b7791f;
+}
+
+.activity-status--cancelled {
+  background: rgba(90, 108, 125, 0.16);
+  color: var(--color-text-muted);
+}

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { db } from '../firebaseConfig';
-import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import './ExpenseList.css';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-
+import { updateMonthlyStatsForExpenseWrite } from '../services/monthlyStatsService';
 
 const ExpenseList = ({ user }) => {
   const [expenses, setExpenses] = useState([]);
@@ -23,8 +23,11 @@ const ExpenseList = ({ user }) => {
     date: '',
     receiptURL: '',
     receiptFile: null, // For the uploaded file
+    sharedWith: [] // Store selected profiles for splitting the expense
   });
   const [loading, setLoading] = useState(true);
+  const [profiles, setProfiles] = useState([]); // Array to store profiles
+  const [selectedProfiles, setSelectedProfiles] = useState([]); // Profiles selected to split the expense
 
   const categoryOptions = ["Food", "Transport", "Entertainment", "Other", "Utilities"];
 
@@ -37,6 +40,7 @@ const ExpenseList = ({ user }) => {
     fetchBudget();
   }, [user.uid]);
 
+  // Fetch the user's expenses and handle snapshot updates
   useEffect(() => {
     const q = query(collection(db, 'expenses'), where('uid', '==', user.uid));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -52,6 +56,17 @@ const ExpenseList = ({ user }) => {
       setLoading(false);
     });
     return () => unsubscribe();
+  }, [user.uid]);
+
+  // Fetch profiles associated with the current user
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const profilesRef = collection(db, `users/${user.uid}/profiles`);
+      const querySnapshot = await getDocs(profilesRef);
+      const profileData = querySnapshot.docs.map(doc => doc.data());
+      setProfiles(profileData);
+    };
+    fetchProfiles();
   }, [user.uid]);
 
   useEffect(() => {
@@ -70,7 +85,15 @@ const ExpenseList = ({ user }) => {
 
   const handleDelete = async (id) => {
     try {
+      const current = expenses.find((e) => e.id === id);
       await deleteDoc(doc(db, 'expenses', id));
+      if (current?.date) {
+        try {
+          await updateMonthlyStatsForExpenseWrite(user.uid, current.date);
+        } catch (_) {
+          // Stats are derived/optional; deletion should still succeed.
+        }
+      }
       alert('Expense deleted successfully!');
     } catch (error) {
       alert('Error deleting expense: ' + error.message);
@@ -94,16 +117,17 @@ const ExpenseList = ({ user }) => {
       date: expense.date,
       receiptURL: expense.receiptURL || '',
       receiptFile: null, // Reset file input on edit
+      sharedWith: expense.sharedWith || [] // Preselect shared profiles if editing
     });
+    setSelectedProfiles(expense.sharedWith || []); // Set selected profiles to the shared profiles of the expense
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     const expenseRef = doc(db, 'expenses', editingExpense);
 
-    // Handle file upload (if any)
     if (updatedExpense.receiptFile) {
-      const uploadedReceiptURL = await uploadReceipt(updatedExpense.receiptFile); // Implement this function
+      const uploadedReceiptURL = await uploadReceipt(updatedExpense.receiptFile);
       updatedExpense.receiptURL = uploadedReceiptURL;
     }
 
@@ -113,8 +137,16 @@ const ExpenseList = ({ user }) => {
         amount: parseFloat(updatedExpense.amount),
         category: updatedExpense.category,
         date: updatedExpense.date,
+        dateEpoch: new Date(`${updatedExpense.date}T00:00:00`).getTime(),
         receiptURL: updatedExpense.receiptURL,
+        sharedWith: selectedProfiles, // Store the selected profiles for splitting the expense
       });
+      const oldExpense = expenses.find((e) => e.id === editingExpense);
+      try {
+        await updateMonthlyStatsForExpenseWrite(user.uid, updatedExpense.date, oldExpense?.date || updatedExpense.date);
+      } catch (_) {
+        // Stats are derived/optional; edit should still succeed.
+      }
       alert('Expense updated successfully!');
       setEditingExpense(null);
     } catch (error) {
@@ -129,11 +161,15 @@ const ExpenseList = ({ user }) => {
     setUpdatedExpense({ ...updatedExpense, receiptFile: e.target.files[0] });
   };
 
+  const handleProfileSelection = (e) => {
+    const selected = Array.from(e.target.selectedOptions, option => option.value);
+    setSelectedProfiles(selected); // Update the selected profiles for splitting the expense
+  };
+
   return (
     <div className="expense-list">
       <h2>My Expenses</h2>
-      
-      
+
       {loading ? <p>Loading expenses...</p> : (
         <>
           {budget !== null && (
@@ -243,7 +279,15 @@ const ExpenseList = ({ user }) => {
                 type="file"
                 onChange={handleFileChange}
               />
-              <button type="submit">Update</button>
+              <div>
+                <label>Share Expense With:</label>
+                <select multiple onChange={handleProfileSelection}>
+                  {profiles.map((profile, index) => (
+                    <option key={index} value={profile.email}>{profile.name} - {profile.email}</option>
+                  ))}
+                </select>
+              </div>
+              <button type="submit">Update Expense</button>
               <button type="button" onClick={handleCancelEdit}>Cancel</button>
             </form>
           )}

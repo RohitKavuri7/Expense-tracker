@@ -7,12 +7,15 @@ import ExpenseReport from './components/ExpenseReport';
 import BudgetForm from './components/BudgetForm';
 import ForgotPassword from './components/ForgotPassword';
 import Sidebar from './components/Sidebar';
-import { auth } from './firebaseConfig';
 import Profile from './components/Profile';
+import ProfileManagement from './components/ProfileManagement';
+import Agent from './components/Agent';
+import { auth } from './firebaseConfig';
 import './App.css';
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(setUser);
@@ -28,17 +31,21 @@ const App = () => {
     }
   };
 
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
     <Router>
-      <div className="App">
+      <div className={`App${sidebarOpen ? ' sidebar-open' : ''}`}>
         {user ? (
           <>
             <header className="header">
+              <button type="button" className="menu-btn" onClick={() => setSidebarOpen(true)} aria-label="Open menu">☰</button>
               <h1>Expense Tracker</h1>
               <button className="logout-btn" onClick={handleLogout}>Logout</button>
             </header>
             <div className="content">
-              <Sidebar />
+              {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar} aria-hidden="true" />}
+              <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
               <main className="main-content">
                 <Routes>
                   <Route path="/" element={<ExpenseList user={user} />} />
@@ -47,6 +54,8 @@ const App = () => {
                   <Route path="/set-budget" element={<BudgetForm user={user} />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/profile-management" element={<ProfileManagement user={user} />} />
+                  <Route path="/agent" element={<Agent user={user} />} />
                 </Routes>
               </main>
             </div>

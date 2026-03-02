@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { db, storage } from '../firebaseConfig';
-import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { addExpense } from '../services/expenseService';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
+import { updateMonthlyStatsForExpenseWrite } from '../services/monthlyStatsService';
 import './ExpenseForm.css';
 
 const ExpenseForm = ({ user, expenseId }) => {
@@ -13,11 +15,26 @@ const ExpenseForm = ({ user, expenseId }) => {
   const [customCategory, setCustomCategory] = useState('');
   const [receipt, setReceipt] = useState(null);
   const [date, setDate] = useState('');
+  const [originalExpenseDate, setOriginalExpenseDate] = useState('');
   const [existingReceiptURL, setExistingReceiptURL] = useState('');
+  const [profiles, setProfiles] = useState([]); // Array to hold user profiles
+  const [selectedProfiles, setSelectedProfiles] = useState([]); // Profiles selected to split the expense
 
   const predefinedCategories = ['Food', 'Transport', 'Utilities', 'Entertainment', 'Other'];
   const navigate = useNavigate();
 
+  // Fetch all profiles for the user
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const profilesRef = collection(db, `users/${user.uid}/profiles`);
+      const querySnapshot = await getDocs(profilesRef);
+      const profileData = querySnapshot.docs.map(doc => doc.data());
+      setProfiles(profileData);
+    };
+    fetchProfiles();
+  }, [user.uid]);
+
+  // Fetch expense data if we're editing
   useEffect(() => {
     const fetchExpenseData = async () => {
       if (expenseId) {
@@ -28,7 +45,9 @@ const ExpenseForm = ({ user, expenseId }) => {
           setAmount(expenseData.amount);
           setCategory(expenseData.category);
           setDate(expenseData.date.split('T')[0]);
+          setOriginalExpenseDate(expenseData.date.split('T')[0]);
           setExistingReceiptURL(expenseData.receiptURL || '');
+          setSelectedProfiles(expenseData.sharedWith || []); // Preselect shared profiles if editing
         }
       }
     };
@@ -57,14 +76,12 @@ const ExpenseForm = ({ user, expenseId }) => {
 
   const extractExpenseData = (text) => {
     const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
-
     const storeKeywords = ['Walmart', 'Target', 'Costco'];
     const amountKeywords = ['Total', 'Amount Due', 'Balance'];
 
     let foundStoreName = '';
     let foundAmount = '';
 
-    // Look for a line with a store name
     for (const line of lines) {
       if (storeKeywords.some(keyword => line.toLowerCase().includes(keyword.toLowerCase()))) {
         foundStoreName = line;
@@ -72,7 +89,6 @@ const ExpenseForm = ({ user, expenseId }) => {
       }
     }
 
-    // Look for the total amount
     for (const line of lines) {
       if (amountKeywords.some(keyword => line.toLowerCase().includes(keyword.toLowerCase()))) {
         const amountMatch = line.match(/\$?\d+(?:,\d{3})*(?:\.\d{2})?/);
@@ -83,15 +99,12 @@ const ExpenseForm = ({ user, expenseId }) => {
       }
     }
 
-    // Set extracted data in the form fields
     if (foundStoreName) {
       setName(foundStoreName);
     }
     if (foundAmount) {
       setAmount(foundAmount);
     }
-
-    // Auto-select category based on the store if possible
     if (foundStoreName && predefinedCategories.includes(foundStoreName)) {
       setCategory(foundStoreName);
     } else {
@@ -127,6 +140,7 @@ const ExpenseForm = ({ user, expenseId }) => {
       category: category === 'Custom' ? customCategory : category,
       date,
       uid: user.uid,
+      sharedWith: selectedProfiles, // Store the selected profiles for splitting the expense
     };
 
     try {
@@ -139,10 +153,20 @@ const ExpenseForm = ({ user, expenseId }) => {
       }
 
       if (expenseId) {
-        await updateDoc(doc(db, 'expenses', expenseId), { ...expenseData, receiptURL });
+        const expenseRef = doc(db, 'expenses', expenseId);
+        await updateDoc(expenseRef, {
+          ...expenseData,
+          receiptURL,
+          dateEpoch: new Date(`${expenseData.date}T00:00:00`).getTime(),
+        });
+        try {
+          await updateMonthlyStatsForExpenseWrite(user.uid, expenseData.date, originalExpenseDate || expenseData.date);
+        } catch (_) {
+          // Stats are derived/optional; update should not block expense edit.
+        }
         alert('Expense updated successfully!');
       } else {
-        await addDoc(collection(db, 'expenses'), { ...expenseData, receiptURL });
+        await addExpense({ ...expenseData, receiptURL });
         alert('Expense added successfully!');
       }
 
@@ -202,6 +226,17 @@ const ExpenseForm = ({ user, expenseId }) => {
           onChange={handleReceiptUpload}
         />
         {receipt && <p>Receipt Uploaded: {receipt.name}</p>}
+
+        {/* Profiles selection for splitting the expense */}
+        <div>
+          <label>Share Expense With:</label>
+          <select multiple onChange={(e) => setSelectedProfiles(Array.from(e.target.selectedOptions, option => option.value))}>
+            {profiles.map((profile, index) => (
+              <option key={index} value={profile.email}>{profile.name} - {profile.email}</option>
+            ))}
+          </select>
+        </div>
+
         <button type="submit">{expenseId ? 'Update Expense' : 'Add Expense'}</button>
       </form>
       {expenseId && existingReceiptURL && !receipt && (

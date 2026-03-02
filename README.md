@@ -57,6 +57,30 @@ Edit/Delete Expense: Modify or remove any expense by selecting the edit or delet
 Budget Management: Set monthly budgets to monitor expenses.
 View Reports: Visualize spending trends and analyze expense breakdown by category.
 
+Expense Agent (V1)
+Use the "Agent" link in the sidebar to:
+- Ask "Where did I overspend last month?" to see the category where you spent the most.
+- Add expenses by typing, e.g. "I spent $100 on groceries" (amount and category are extracted and saved like the Add Expense form).
+- Ask "How can I reduce my expenses?" for predictions and reduction tips based on your spending data.
+The agent uses OpenAI only as a decision engine while calculations are deterministic in app services.
+
+Agent Architecture (Demo / Frontend-only)
+- Flow: React Client -> OpenAI API.
+- OpenAI SDK is used in-browser via `src/ai/openaiClient.js`.
+- API key is read from `.env` using `REACT_APP_OPENAI_API_KEY`.
+- Hybrid routing remains: supported analytics/commands are handled locally first, and LLM is used for ambiguous natural-language requests.
+
+Deterministic Analytics (No model math)
+- `getMonthlyForecast(uid)`: projects month-end spend from current daily velocity.
+- `getBehaviorInsights(uid)`: detects weekend spikes, rising categories, and frequent small purchases.
+- `getFinancialHealthScore(uid)`: scores budget adherence, top-category concentration, and month-over-month growth.
+- All totals/comparisons are computed in `agentService.js` using Firestore data.
+
+Derived Monthly Stats
+- Collection: `userMonthlyStats/{uid}_{YYYY_MM}`.
+- Updated whenever expenses are written/edited/deleted.
+- Stores total, category breakdown, expense count, and largest expense for fast analytics.
+
 Testing
 Manual Testing: The app was manually tested for functionality, user interface, and performance.
 Automated Testing: Automated test cases are implemented using Selenium for major workflows.

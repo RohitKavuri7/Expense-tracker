@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { auth } from '../firebaseConfig';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';  // Import Firebase configuration
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import './Profile.css';
 
-const db = getFirestore();
-
-function Profile() {
+const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
@@ -14,16 +12,16 @@ function Profile() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Fetch user data on component mount
     const fetchUserData = async () => {
-      setError('');
-      setSuccessMessage('');
-      const user = auth.currentUser;
+      const user = auth.currentUser; // Get the currently authenticated user
+
       if (user) {
         try {
-          const docRef = doc(db, 'users', user.uid);
-          const docSnap = await getDoc(docRef);
+          const docRef = doc(db, 'users', user.uid); // Get reference to the user's document
+          const docSnap = await getDoc(docRef); // Fetch the document
           if (docSnap.exists()) {
-            const data = docSnap.data();
+            const data = docSnap.data(); // If document exists, get the data
             setUserData(data);
             setName(data.name || '');
             setEmail(data.email || '');
@@ -39,7 +37,7 @@ function Profile() {
     };
 
     fetchUserData();
-  }, []);
+  }, []);  // Only run once on mount
 
   const handleSave = async () => {
     setError('');
@@ -106,6 +104,6 @@ function Profile() {
       )}
     </div>
   );
-}
+};
 
 export default Profile;
